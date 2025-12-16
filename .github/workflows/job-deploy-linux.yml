@@ -139,9 +139,19 @@ jobs:
 
           # Deploy using azd up
           azd up --no-prompt
+          echo "✅ Deployment succeeded."
 
           echo "Extracting deployment outputs..."
           azd env get-values
+
+          CONTAINER_WEB_APP_FQDN=$(azd env get-value CONTAINER_WEB_APP_FQDN)
+          WEB_APPURL="https://$CONTAINER_WEB_APP_FQDN"
+          echo "WEB_APPURL=$WEB_APPURL" >> $GITHUB_OUTPUT
+
+          CONTAINER_API_APP_FQDN=$(azd env get-value CONTAINER_API_APP_FQDN)
+          API_APPURL="https://$CONTAINER_API_APP_FQDN"
+          echo "API_APPURL=$API_APPURL" >> $GITHUB_OUTPUT
+
           sleep 30
 
       - name: Generate Deploy Job Summary
@@ -161,6 +171,7 @@ jobs:
           if [[ "${{ job.status }}" == "success" ]]; then
             echo "### ✅ Deployment Details" >> $GITHUB_STEP_SUMMARY
             echo "- **Web App URL**: [${{ steps.get_output_linux.outputs.WEB_APPURL }}](${{ steps.get_output_linux.outputs.WEB_APPURL }})" >> $GITHUB_STEP_SUMMARY
+            echo "- **API App URL**: [${{ steps.get_output_linux.outputs.API_APPURL }}](${{ steps.get_output_linux.outputs.API_APPURL }})" >> $GITHUB_STEP_SUMMARY
             echo "- Successfully deployed to Azure with all resources configured" >> $GITHUB_STEP_SUMMARY
             echo "- Post-deployment scripts executed successfully" >> $GITHUB_STEP_SUMMARY
           else
