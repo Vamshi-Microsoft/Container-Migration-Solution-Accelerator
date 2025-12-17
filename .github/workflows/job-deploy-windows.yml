@@ -44,7 +44,6 @@ jobs:
     runs-on: windows-latest
     env:
       AZURE_DEV_COLLECT_TELEMETRY: ${{ vars.AZURE_DEV_COLLECT_TELEMETRY }}
-      AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
     outputs:
       WEB_APPURL: ${{ steps.get_output_windows.outputs.WEB_APPURL }}
     steps:
@@ -158,7 +157,6 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           if [[ "${{ job.status }}" == "success" ]]; then
             echo "### ✅ Deployment Details" >> $GITHUB_STEP_SUMMARY
-            echo "- **Resource Group URL**: [${{ inputs.RESOURCE_GROUP_NAME }}](https://portal.azure.com/#@/resource/subscriptions/${{ env.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ inputs.RESOURCE_GROUP_NAME }}/overview)" >> $GITHUB_STEP_SUMMARY
             echo "- **Web App URL**: [${{ steps.get_output_windows.outputs.WEB_APPURL }}](${{ steps.get_output_windows.outputs.WEB_APPURL }})" >> $GITHUB_STEP_SUMMARY
             echo "- **API App URL**: [${{ steps.get_output_windows.outputs.API_APPURL }}](${{ steps.get_output_windows.outputs.API_APPURL }})" >> $GITHUB_STEP_SUMMARY
             echo "- Successfully deployed to Azure with all resources configured" >> $GITHUB_STEP_SUMMARY
